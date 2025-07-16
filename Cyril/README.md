@@ -1,6 +1,6 @@
 # Predicting cell type identity from Platybrowser
 
-We are attempting to assign cell type identities in an electron microscopy atlas, Platybrowser. For that, we have registered datasets of RNA stainings, and a scRNAseq atlas with known cell types. Using shared key markers, we will assign probabilities to each nuclei of being part of a certain tissue or a certain granular cell type. This is a "spatial transcriptomic"-like approach.
+We are attempting to assign cell type identities in an electron microscopy atlas, Platybrowser. For that, we have registered datasets of RNA stainings, and a scRNAseq atlas with known cell types. Using shared key markers, we will assign probabilities to each nuclei of being part of a certain tissue or a certain granular cell type. This is a "spatial transcriptomics"-like approach.
 
 ## Motivation
 
@@ -33,6 +33,7 @@ The key metadata are:
 - `./prepped_data/`: data where the XLOC are Platybrowser names
     * `./prepped_data/genes_metadata.tsv`  Gene metadata for reference, 1st thing generated
     * `./prepped_data/platybrowser_counts.tsv`  Platybrowser expression matrix, renamed. Values are in $[0,1]$.
+    * `./prepped_data/subclade_ordering_color_scheme.tsv` The information is already in the single cell metadata, but this has the plotting order
 
 - `./source_data/`: no proper XLOC or genes we don't have spatial transcriptomics data for
     * `./source_data/platybrowser/*` Relevant source contents from /g/arendt/EM_6dpf_segmentation/platy-browser-data/data/1.0.1/tables/sbem-6dpf-1-whole-segmented-cells/
