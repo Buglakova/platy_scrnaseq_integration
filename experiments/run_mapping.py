@@ -28,6 +28,8 @@ def main():
     # parser.add_argument("segm_n5_key", type=str, help="Key in the EM segmentation n5")
     parser.add_argument("log_dir", type=str, help="Directory to store diagnostic plots etc")
     parser.add_argument("log_path", type=str, help="Path to log file")
+    parser.add_argument("--smfish_thresh", type=float, default=20)
+    parser.add_argument("--scrnaseq_thresh", type=float, default=2)
 
     args = parser.parse_args()
     
@@ -45,11 +47,11 @@ def main():
     # logging.info(f"Calculate nuclei props")
     # nuclei_props = pd.DataFrame(regionprops_table(segm, properties=("label", "area", 'centroid')))
 
-    logging.info(f"Quality control and preprocessing of the smFISH data")
-    smfish_df = preprocess_registration_output(args.smfish_aggregated_expression, log_dir / "qc_smfish", visualize=False)
+    logging.info(f"Quality control and preprocessing of the smFISH data with count threshold {args.smfish_thresh}")
+    smfish_df = preprocess_registration_output(args.smfish_aggregated_expression, log_dir / "qc_smfish", visualize=True, count_threshold=args.smfish_thresh)
 
-    logging.info(f"Quality control and preprocessing of the scRNAseq data")
-    scrnaseq_ad = preprocess_scrnaseq(args.scrnaseq_atlas, args.gene_metadata, args.cluster_column, smfish_df.columns, log_dir / "qc_scrnaseq", visualize=False)
+    logging.info(f"Quality control and preprocessing of the scRNAseq data with count threshold {args.scrnaseq_thresh}")
+    scrnaseq_ad = preprocess_scrnaseq(args.scrnaseq_atlas, args.gene_metadata, args.cluster_column, smfish_df.columns, log_dir / "qc_scrnaseq", visualize=True, count_threshold=args.scrnaseq_thresh)
     
     # Take only columns of smfish df which were found in scrnaseq atlas metadata
 
