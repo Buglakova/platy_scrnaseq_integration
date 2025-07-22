@@ -94,7 +94,33 @@ def get_cluster_profiles(adata, cluster_column, out_dir):
 
     logging.info(profiles)
 
-    profiles["zero"] = np.zeros_like(profiles[cluster_name])
+    # Create empty profile for the nuclei where nothing was measured
+    profiles["zero"] = np.zeros(adata.shape[1]) + 0.001
 
+    # Create profile that expresses everything for the autofluorescent areas
+    profiles["autofluorescence"] = np.ones(adata.shape[1]) * 0.99
 
     return profiles
+
+
+def visualize_profiles(gene_list, profiles, out_dir):
+    n_clusters = len(profiles)
+    fig, axs = plt.subplots(n_clusters, figsize=(6, n_clusters * 1 + 3))
+    # fig.suptitle('Expression profiles of clusters')
+    fig.tight_layout()
+    
+    for i, k in enumerate(profiles):
+        axs[i].set_title(k)
+        axs[i].bar(gene_list, profiles[k])
+        axs[i].set_ylim(0, 1)
+
+
+    plt.savefig(out_dir / "expression_profiles.png", dpi=300)
+
+
+    # for idx, name in enumerate(gene_list):
+    #     plt.figure()
+    #     plt.bar(cluster_ids, nonzero_cluster[idx, :], color="yellowgreen")
+    #     plt.xlabel("Cluster ID")
+    #     plt.ylabel("Proportion of cells with nonzero expression")
+    #     plt.title(name, fontsize=20)

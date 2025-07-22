@@ -1,5 +1,6 @@
 from cluster_map.preprocess_smfish import preprocess_registration_output
-from cluster_map.preprocess_scrnaseq import preprocess_scrnaseq, get_cluster_profiles
+from cluster_map.preprocess_scrnaseq import preprocess_scrnaseq, get_cluster_profiles, visualize_profiles
+from cluster_map.bayesian_prob import assign_clusters
 
 from pathlib import Path
 # from platy_reg.n5_utils import read_volume, write_volume, get_attrs
@@ -61,7 +62,16 @@ def main():
     # Prepare the expression profiles
 
     profiles = get_cluster_profiles(scrnaseq_ad, args.cluster_column, log_dir / "profiles")
+    total_profile = np.array(scrnaseq_ad.X.sum(axis=0) / scrnaseq_ad.X.shape[0]).flatten()
+    logging.info("total profile")
+    logging.info(total_profile)
+    visualize_profiles(gene_list, {**profiles, "total": total_profile}, log_dir / "profiles")
 
+    
+
+    # Given the binarized smFISH expression and expression profiles, assign cluster probability to each nucleus in EM
+
+    assign_clusters(smfish_df, gene_list, profiles, total_profile, log_dir / "cluster_prob")
 
 
 
