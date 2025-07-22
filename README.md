@@ -23,7 +23,8 @@ $$
 
 All parts can be easily estimated from the scRNAseq atlas:
 
-$$P(\vec{e}|cell \in cluster_i) = \prod\limits_{g=0}^{G}[\vec{e}_g \cdot nonzero_{g,i} + (1 -\vec{e}_g) \cdot (1 - nonzero_{g,i}))]$$
+$$P(\vec{e}|cell \in cluster_i) = \prod\limits_{g=0}^{G}[\vec{e}_g \cdot nonzero_{g,i} + (1 -\vec{e}_g) \cdot (1 - nonzero_{g,i})]$$
+
 $$P(cell \in cluster_i) = \frac{1}{N_{clusters}}$$
 $$P(\vec{e}) = \sum\limits_{k=0}^{N_{clusters}}P(\vec{e}|cell \in cluster_k)\cdot P(cell \in cluster_k)$$
 
