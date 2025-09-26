@@ -24,8 +24,10 @@ def preprocess_scrnaseq(scrnaseq_atlas_path, gene_metadata_path, cluster_column,
         adata,
         color=cluster_column,
         size=2,
+        show=False
         )
         plt.savefig(out_dir / "umap.png", dpi=300, bbox_inches="tight")
+        plt.close("all")
 
     logging.info("Number of cells per cluster/n" + str(adata.obs[cluster_column].value_counts()))
 
@@ -58,6 +60,7 @@ def preprocess_scrnaseq(scrnaseq_atlas_path, gene_metadata_path, cluster_column,
         plt.ylabel("Normalized expression level")
         plt.xlabel("Cell number")
         plt.savefig(out_dir / "norm_count_cumulative.png", dpi=300, bbox_inches="tight")
+        plt.close("all")
                  
 
     logging.info(subset_adata)
@@ -113,9 +116,11 @@ def visualize_profiles(gene_list, profiles, out_dir):
         axs[i].set_title(k)
         axs[i].bar(gene_list, profiles[k])
         axs[i].set_ylim(0, 1)
+        axs[i].tick_params("x", rotation=45)
 
 
     plt.savefig(out_dir / "expression_profiles.png", dpi=300)
+    plt.close("all")
 
 
     # for idx, name in enumerate(gene_list):

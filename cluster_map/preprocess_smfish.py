@@ -50,11 +50,13 @@ def preprocess_registration_output(aggregated_table_path, out_dir, count_thresho
         sns.stripplot(df_expr, jitter=0.4, alpha=0.6, orient="h")
         plt.title("Distribution of raw counts")
         plt.savefig(out_dir / "raw_count_stripplot.png", dpi=300)
+        plt.close("all")
 
         plt.figure(figsize=(10, 1 * len(df_expr.columns)))
         sns.violinplot(df_expr, alpha=0.6, orient="h", cut=0)
         plt.title("Distribution of raw counts")
         plt.savefig(out_dir / "raw_count_violinplot.png", dpi=300)
+        plt.close("all")
 
 
     # Threshold by raw number of counts
@@ -75,6 +77,7 @@ def preprocess_registration_output(aggregated_table_path, out_dir, count_thresho
             plot_cumulative_expression(df_norm_expr[col], col)
             plt.tight_layout()
             plt.savefig(out_dir / "norm_count_cumulative.png", dpi=300)
+            plt.close("all")
 
     df_bin_expr = (df_norm_expr > 0).astype(np.int16)
 
@@ -90,13 +93,14 @@ def preprocess_registration_output(aggregated_table_path, out_dir, count_thresho
         plt.xlabel("genes")
         plt.ylabel("Number of cells")
         plt.savefig(out_dir / "bin_nonzero_per_gene.png", dpi=300)
+        plt.close("all")
 
         plt.figure(figsize=(0.5 * len(df_expr.columns), 5))
         plt.bar(df_bin_expr.sum(axis=1).value_counts().index, df_bin_expr.sum(axis=1).value_counts())
         plt.xlabel("Number of nonzero genes")
         plt.ylabel("Number of cells")
         plt.savefig(out_dir / "bin_nonzero_per_cell.png", dpi=300)
-
+        plt.close("all")
 
     df_bin_expr.to_csv(out_dir / "smfish_bin_expr.tsv", sep="\t", index=True, index_label="label_id")
     df_norm_expr.to_csv(out_dir / "smfish_norm_expr.tsv", sep="\t", index=True, index_label="label_id")
