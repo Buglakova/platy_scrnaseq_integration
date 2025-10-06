@@ -14,7 +14,7 @@ def preprocess_scrnaseq(scrnaseq_atlas_path, gene_metadata_path, cluster_column,
     logging.info(adata)
 
     # Normalize
-    adata.layers['counts'] = adata.layers.pop('RNA')
+    adata.layers['counts'] = adata.layers.pop('RNA_counts')
     adata.X = adata.layers['counts'].copy()
     sc.pp.normalize_total(adata, target_sum=1e4)
     sc.pp.log1p(adata)    
@@ -108,7 +108,7 @@ def get_cluster_profiles(adata, cluster_column, out_dir):
 
 def visualize_profiles(gene_list, profiles, out_dir):
     n_clusters = len(profiles)
-    fig, axs = plt.subplots(n_clusters, figsize=(6, n_clusters * 1 + 3))
+    fig, axs = plt.subplots(n_clusters, figsize=(12, n_clusters * 2 + 3))
     # fig.suptitle('Expression profiles of clusters')
     fig.tight_layout()
     
@@ -117,6 +117,10 @@ def visualize_profiles(gene_list, profiles, out_dir):
         axs[i].bar(gene_list, profiles[k])
         axs[i].set_ylim(0, 1)
         axs[i].tick_params("x", rotation=45)
+
+    
+    plt.tight_layout(pad=1.5, h_pad=2)
+
 
 
     plt.savefig(out_dir / "expression_profiles.png", dpi=300)

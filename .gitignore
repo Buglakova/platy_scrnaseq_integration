@@ -164,4 +164,9 @@ data/smfish/expression_matrix_aggregated_local.tsv
 data/scrnaseq_atlas/seurat_curated_6dpf.h5ad
 other_data/
 other_experiments/
+other_cluster_map/
+data/scrnaseq_atlas/atlas_6dpf.h5ad
+
+# adding to ignore for now since a sample already exists on github and adding the rest only makes sense once its actually good!!!!
+data/experiments/
 
