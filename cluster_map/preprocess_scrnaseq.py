@@ -116,7 +116,7 @@ def visualize_profiles(gene_list, profiles, out_dir):
         axs[i].set_title(k)
         axs[i].bar(gene_list, profiles[k])
         axs[i].set_ylim(0, 1)
-        axs[i].tick_params("x", rotation=45, labelsize=4)
+        axs[i].tick_params("x", rotation=90, labelsize=4)
 
     
     plt.tight_layout(pad=1.5, h_pad=2)
