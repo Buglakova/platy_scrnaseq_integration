@@ -28,12 +28,16 @@ def percentile_norm(expr, pmin, pmax, eps=1e-10):
     return np.clip(((expr.astype(np.float32) - pmin) / (pmax - pmin + eps)), a_min=0, a_max=1)
 
 
-def preprocess_registration_output(aggregated_table_path, out_dir, count_threshold=20, visualize=True):
+def preprocess_registration_output(aggregated_table_path, out_dir, count_threshold=20, visualize=True, technique="smfish"):
 
     expression_matrix_path = aggregated_table_path
     df = pd.read_csv(expression_matrix_path, sep="\t")
     df = df.set_index("label_id")
-    columns = [col for col in df.columns if col.endswith("spots")]
+    if technique == "smfish":
+        columns = [col for col in df.columns if col.endswith("spots")]
+
+    if technique == "prospr":
+        columns = df.columns
     df_expr = df[columns]
     df_expr = df_expr.rename(columns={col: col.split("_")[0].lower() for col in df_expr.columns})
 

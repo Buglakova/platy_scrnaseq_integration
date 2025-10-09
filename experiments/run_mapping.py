@@ -30,6 +30,7 @@ def main():
     parser.add_argument("log_path", type=str, help="Path to log file")
     parser.add_argument("--smfish_thresh", type=float, default=20)
     parser.add_argument("--scrnaseq_thresh", type=float, default=2)
+    parser.add_argument("--technique", type=str, default="smfish")
 
     args = parser.parse_args()
     
@@ -48,7 +49,7 @@ def main():
     # nuclei_props = pd.DataFrame(regionprops_table(segm, properties=("label", "area", 'centroid')))
 
     logging.info(f"Quality control and preprocessing of the smFISH data with count threshold {args.smfish_thresh}")
-    smfish_df = preprocess_registration_output(args.smfish_aggregated_expression, log_dir / "qc_smfish", visualize=True, count_threshold=args.smfish_thresh)
+    smfish_df = preprocess_registration_output(args.smfish_aggregated_expression, log_dir / "qc_smfish", visualize=False, count_threshold=args.smfish_thresh, technique=args.technique)
 
     logging.info(f"Quality control and preprocessing of the scRNAseq data with count threshold {args.scrnaseq_thresh}")
     scrnaseq_ad = preprocess_scrnaseq(args.scrnaseq_atlas, args.gene_metadata, args.cluster_column, smfish_df.columns, log_dir / "qc_scrnaseq", visualize=True, count_threshold=args.scrnaseq_thresh)
