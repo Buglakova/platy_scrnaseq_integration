@@ -126,6 +126,10 @@ def visualize_profiles(gene_list, profiles, out_dir):
         axs[i].set_ylim(0, 1)
         axs[i].tick_params("x", rotation=90, labelsize=4)
 
+    
+    plt.tight_layout(pad=1.5, h_pad=2)
+
+
     plt.tight_layout(pad=1.5, h_pad=2)
 
     plt.savefig(out_dir / "expression_profiles.png", dpi=300)
