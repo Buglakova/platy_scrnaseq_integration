@@ -66,7 +66,9 @@ Optional arguments `--smfish_thresh` and `--scrnaseq_thresh` define the threshol
 
 ## Tasks
 
-- Add missing genes from smFISH to the `gene_metadata.tsv`
-- Try with different binariation thresholds and clusters
-- Implement using Prospr as additional evidence/to increase number of genes
+- Use prospr together with HCR (scale ROpsin and Muscle to be in the range of spots)
+
+- Check if cell types are distinguishable with the given set of genes by generating ~100 fake cells per cell type and trying to map them, then plotting confusion matrix of cell types. If some cell types get confused too much, then we could join them together
+
+- Try to run in the hierarchical fashion: first split into broad groups, for example, find neurons, and then split only neurons into smaller cell types
 
