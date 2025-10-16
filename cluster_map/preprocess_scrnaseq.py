@@ -17,7 +17,7 @@ def preprocess_scrnaseq(scrnaseq_atlas_path, gene_metadata_path, cluster_column,
     adata.layers['counts'] = adata.layers.pop('RNA_counts')
     adata.X = adata.layers['counts'].copy()
     sc.pp.normalize_total(adata, target_sum=1e4)
-    sc.pp.log1p(adata)    
+    sc.pp.log1p(adata)
 
     if visualize:
         sc.pl.umap(
@@ -57,6 +57,7 @@ def preprocess_scrnaseq(scrnaseq_atlas_path, gene_metadata_path, cluster_column,
             expr = subset_adata[:, name].X.toarray().T[0]
             expr_sorted = np.sort(expr)
             thr = np.median(expr_sorted[expr_sorted > 0])
+            # thr = np.percentile(expr_sorted, 70) 
             thresholds.append(thr)
             plt.plot(expr_sorted, label=name)
             plt.hlines(y=thr, xmin=0, xmax=len(expr_sorted), color="red")
@@ -66,7 +67,7 @@ def preprocess_scrnaseq(scrnaseq_atlas_path, gene_metadata_path, cluster_column,
             plt.title("Cumulative distribution of expression levels")
             plt.ylabel("Normalized expression level")
             plt.xlabel("Cell number")
-            plt.savefig(out_dir / f"{name}_norm_count_cumulative.png", dpi=300, bbox_inches="tight")
+            plt.savefig(out_dir / f"{subset_adata.var.loc[name, 'pb_name']}_norm_count_cumulative.png", dpi=300, bbox_inches="tight")
             plt.close("all")
                  
     
@@ -106,7 +107,7 @@ def get_cluster_profiles(adata, cluster_column, out_dir):
     logging.info(profiles)
 
     # Create empty profile for the nuclei where nothing was measured
-    profiles["zero"] = np.zeros(adata.shape[1]) + 0.001
+    profiles["zero"] = np.zeros(adata.shape[1]) + 0.0000001
 
     # Create profile that expresses everything for the autofluorescent areas
     profiles["autofluorescence"] = np.ones(adata.shape[1]) * 0.99

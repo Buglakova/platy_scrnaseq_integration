@@ -34,12 +34,25 @@ def preprocess_registration_output(aggregated_table_path, out_dir, count_thresho
     df = pd.read_csv(expression_matrix_path, sep="\t")
     df = df.set_index("label_id")
     if technique == "smfish":
-        columns = [col for col in df.columns if col.endswith("spots")]
+        # columns = [col for col in df.columns if col.endswith("spots")]
+        columns = [col for col in df.columns if "_spots" in col]
 
     if technique == "prospr":
         columns = df.columns
     df_expr = df[columns]
-    df_expr = df_expr.rename(columns={col: col.split("_")[0].lower() for col in df_expr.columns})
+    
+    # Renaming map
+    new_names_map = {col: col.split("_")[0].lower() for col in df_expr.columns}
+    # Rename (creates columns with duplicate names, ex. two 'foxq2' columns)
+    df_expr = df_expr.copy()
+    df_expr.columns = [new_names_map[col] for col in df_expr.columns]
+    # Group the duplicate columns (with OR)
+    if df_expr.columns.duplicated().any():
+        df_expr = df_expr.groupby(df_expr.columns, axis=1).max()
+
+
+############################# OLD CODE KEPT IN CASE!!!
+#    df_expr = df_expr.rename(columns={col: col.split("_")[0].lower() for col in df_expr.columns})
 
     out_dir = Path(out_dir)
     out_dir.mkdir(exist_ok=True)
