@@ -43,30 +43,35 @@ To accomodate for the missing signal and autofluorescent areas, two artificial c
 Create environment using `environment.yml`
 
 Run:
-```python experiments/run_mapping.py data/scrnaseq_atlas/scrnaseq_atlas.h5ad data/scrnaseq_atlas/gene_metadata.tsv group_full data/smfish/expression_matrix_aggregated.tsv data/experiments/large_groups/ data/experiments/large_groups/cluster_mapping.log --smfish_thresh 20 --scrnaseq_thresh 2 ```
+
+``` python experiments/run_mapping.py --scrnaseq_atlas data/scrnaseq_atlas/updated_6dpf_atlas.h5ad --gene_metadata data/scrnaseq_atlas/genes_metadata.tsv --cluster_column broad.types --smfish_data data/smfish/expression_matrix_aggregated_confocal_fixed.tsv --prospr_data data/smfish/prospr_genes_nuclei.tsv --smfish_thresh 20 --prospr_thresh 0.1 --visualize --run_diagnostic --profile_constant data/experiments/large_groups/ data/experiments/large_groups/cluster_mapping.log```
 
 Here:
 
-`data/scrnaseq_atlas/scrnaseq_atlas.h5ad` - scRNAseq atlas object
+`data/scrnaseq_atlas/updated_6dpf_atlas.h5ad` - scRNAseq atlas object
 
-`data/scrnaseq_atlas/gene_metadata.tsv` - metadata table from Cyril to convert gene names to XLOC
+`data/scrnaseq_atlas/gense_metadata.tsv` - metadata table to convert gene names to XLOC (gene IDs in scRNAseq object)
 
-`group_full` - column in the scRNAseq atalas `obs` to use as cluster names
+`broad.types` - column in the scRNAseq atalas `obs` to use as cluster names, also made to run 'curated_high_res_annotations' (small_groups)
 
-`data/smfish/expression_matrix_aggregated.tsv` - output of the registration pipeline
+`data/smfish/expression_matrix_aggregated_confocal_fixed.tsv` - output of the registration pipeline
 
 `data/experiments/large_groups/` - results (plots and tables) are saved in this directory
 
 `data/experiments/large_groups/cluster_mapping.log` - log with some QC information
 
-Optional arguments `--smfish_thresh` and `--scrnaseq_thresh` define the thresholds for binarizing each data type
+Optional arguments:
+`--smfish_thresh` - defines the thresholds for binarizing HCR stained smfish data, in units of spots, so a threshold of 20 would binarize all nuclei/cells which express more than 20 spotiflow recognized HCR spots
+`--prospr_thresh` - defines the thresholds for binarizing prospr data, which comes from WMISH staining and has already been normalized on expression from 0-1
+`--visualize` - if passed plots all visualizations
+`--run_diagnostic` - if passed outputs diagnostic tables helpful for figuring out certain nuclei/cell assignment probabilities, as well as smfish & prospr gene integration
+`--profile_constant` - defines a constant base value added to scRNAseq profiles for each cluster in order to stop probabilities of 0 or 1 of occurring, default is 0.001
+ 
 
-**Final output**: `data/experiments/large_groups/cluster_prob/cluster_probability.tsv` - this table can be viewed in Platybrowser if you open EM nuclei segmentation and add table from file system.
+**Final output**: `data/experiments/large_groups/results/cluster_probability.tsv` - this table can be viewed in Platybrowser if you open EM nuclei segmentation and add table from file system.
 
 
 ## Tasks
-
-- Use prospr together with HCR (scale ROpsin and Muscle to be in the range of spots)
 
 - Check if cell types are distinguishable with the given set of genes by generating ~100 fake cells per cell type and trying to map them, then plotting confusion matrix of cell types. If some cell types get confused too much, then we could join them together
 

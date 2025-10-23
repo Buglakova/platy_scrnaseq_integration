@@ -5,6 +5,7 @@ import pandas as pd
 import logging
 from pathlib import Path
 import numpy as np
+import pickle
 
 def preprocess_scrnaseq(scrnaseq_atlas_path, gene_metadata_path, cluster_column, gene_list, out_dir, count_threshold=2, visualize=True):
     out_dir = Path(out_dir)
@@ -84,8 +85,7 @@ def preprocess_scrnaseq(scrnaseq_atlas_path, gene_metadata_path, cluster_column,
     return subset_adata_bin
 
 
-
-def get_cluster_profiles(adata, cluster_column, out_dir):
+def get_cluster_profiles(adata, cluster_column, out_dir, base_value: float = 0.001):
 
     out_dir = Path(out_dir)
     out_dir.mkdir(exist_ok=True)
@@ -99,12 +99,12 @@ def get_cluster_profiles(adata, cluster_column, out_dir):
     logging.info(cluster_sizes)
     profiles = {}
     for cluster_name in cluster_names:
-        profiles[cluster_name] = adata_aggregated[cluster_name, :].layers["count_nonzero"] / cluster_sizes[cluster_name]
+        nonzero_counts = adata_aggregated[cluster_name, :].layers["count_nonzero"]
+        
+        # This ensures P is never exactly 0 or 1.
+        profiles[cluster_name] = (nonzero_counts + base_value) / (cluster_sizes[cluster_name] + 2 * base_value)
         profiles[cluster_name] = np.array(profiles[cluster_name]).flatten()
-
-
-
-    logging.info(profiles)
+        
 
     # Create empty profile for the nuclei where nothing was measured
     profiles["zero"] = np.zeros(adata.shape[1]) + 0.0000001
@@ -112,10 +112,19 @@ def get_cluster_profiles(adata, cluster_column, out_dir):
     # Create profile that expresses everything for the autofluorescent areas
     profiles["autofluorescence"] = np.ones(adata.shape[1]) * 0.99
 
+    # INSERTION POINT: SAVE THE PROFILES DICTIONARY
+    output_file = out_dir / "profiles_dictionary.pkl"
+    try:
+        with open(output_file, 'wb') as f:
+            pickle.dump(profiles, f)
+        logging.info(f"Successfully saved cluster profiles dictionary to: {output_file}")
+    except Exception as e:
+        logging.error(f"Failed to save cluster profiles via pickle: {e}")
+
     return profiles
 
 
-def visualize_profiles(gene_list, profiles, out_dir):
+""" def visualize_profiles(gene_list, profiles, out_dir):
     n_clusters = len(profiles)
     fig, axs = plt.subplots(n_clusters, figsize=(12, n_clusters * 2 + 3))
     # fig.suptitle('Expression profiles of clusters')
@@ -134,7 +143,54 @@ def visualize_profiles(gene_list, profiles, out_dir):
     plt.tight_layout(pad=1.5, h_pad=2)
 
     plt.savefig(out_dir / "expression_profiles.png", dpi=300)
-    plt.close("all")
+    plt.close("all") """
+
+def visualize_profiles(gene_list, profiles, out_dir):
+    """
+    Generates and saves the gene expression profile for each cluster as a separate PNG file.
+
+    Args:
+        gene_list (list): List of gene names (for the x-axis).
+        profiles (dict): Dictionary where keys are cluster names and values are 
+                         the expression profile arrays (0-1).
+        out_dir (Path): The directory path (e.g., log_dir / "profiles") to save the plots.
+    """
+    logging.info(f"Generating and saving individual expression profile plots for {len(profiles)} clusters...")
+    
+    # Ensure the output directory exists
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # Iterate through each cluster profile
+    for cluster_name, profile_data in profiles.items():
+        
+        # 1. Create a new figure for each cluster
+        # Use a reasonable size that accommodates all genes on the x-axis
+        # Size suggestion: 0.15 inches per gene + margin, but we'll use a fixed wide size.
+        fig, ax = plt.subplots(figsize=(15, 6)) 
+
+        # 2. Plot the profile data
+        ax.bar(gene_list, profile_data, color='darkblue', alpha=0.9)
+        
+        # 3. Set limits and labels
+        ax.set_ylim(0, 1)
+        ax.set_title(f'Cluster Profile: {cluster_name}', fontsize=14)
+        ax.set_ylabel('Proportion of Cells Expressing Gene')
+        ax.set_xlabel('Gene')
+        
+        # Rotate x-axis ticks for readability (important for many genes)
+        ax.tick_params("x", rotation=90, labelsize=6)
+        
+        # 4. Save the figure
+        # Sanitize the filename to handle spaces/slashes in cluster names
+        safe_name = cluster_name.replace(' ', '_').replace('/', '_').replace('\\', '_')
+        plot_path = out_dir / f"profile_{safe_name}.png"
+        
+        # Use tight_layout only for this specific figure
+        plt.tight_layout() 
+        plt.savefig(plot_path, dpi=300)
+        plt.close(fig) # Close the figure to free memory
+
+    logging.info(f"Successfully saved {len(profiles)} individual cluster profile plots to {out_dir}")
 
 
     # for idx, name in enumerate(gene_list):

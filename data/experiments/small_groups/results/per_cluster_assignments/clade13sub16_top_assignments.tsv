@@ -1,0 +1,7 @@
+label_id	rank	inverse_rank	assignment_type
+3993.0	1.0	10.0	assigned
+4927.0	1.0	10.0	assigned
+3544.0	2.0	9.0	top_10
+7795.0	2.0	9.0	top_10
+8085.0	3.0	8.0	top_10
+8587.0	8.0	3.0	top_10
