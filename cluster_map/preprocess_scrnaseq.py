@@ -50,20 +50,27 @@ def preprocess_scrnaseq(scrnaseq_atlas_path, gene_metadata_path, cluster_column,
     logging.info(subset_adata.var_names)
 
     thresholds = []
-    if visualize:
+    for name in subset_adata.var.index:
+        expr = subset_adata[:, name].X.toarray().T[0]
+        expr_sorted = np.sort(expr)
+        # Calculate the median of non-zero expression values
+        thr = np.median(expr_sorted[expr_sorted > 0])
+        thresholds.append(thr)
         
-        for name in subset_adata.var.index:
+    # Now, if visualize is True, create the plots using the calculated thresholds.
+    if visualize:
+        logging.info("Generating cumulative expression plots...")
+        for i, name in enumerate(subset_adata.var.index):
             print(f"Plot cumulative expression {name}")
             plt.figure(figsize=(6, 5))
             expr = subset_adata[:, name].X.toarray().T[0]
             expr_sorted = np.sort(expr)
-            thr = np.median(expr_sorted[expr_sorted > 0])
-            # thr = np.percentile(expr_sorted, 70) 
-            thresholds.append(thr)
+            
+            # Use the pre-calculated threshold for the plot
+            thr = thresholds[i] 
+            
             plt.plot(expr_sorted, label=name)
             plt.hlines(y=thr, xmin=0, xmax=len(expr_sorted), color="red")
-            # plt.vlines(x = diff[np.isclose(diff, 0)], ymin=0, ymax=1)
-            # plt.hist(expr, 100, cumulative=True, label=name, histtype="step", orientation="horisontal")
             plt.legend()
             plt.title("Cumulative distribution of expression levels")
             plt.ylabel("Normalized expression level")
