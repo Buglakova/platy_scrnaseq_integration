@@ -12,11 +12,11 @@ Map scRNAseq clusters to imaging data using smFISH signal
 
 **Output**
 
-Probability that given the expression measurements the cell belongs to cluster $i$: $`P(cell \in cluster_i | \vec{e}), i \in \{1 .. N\}`$
+Probability that given the expression measurements the cell belongs to cluster $i$: $$P(cell \in cluster_i | \vec{e}), i \in \{1 .. N\}$$
 
 **Method**
 
-Using Bayes theorem
+Using Bayes theorem  
 $$P(cell \in cluster_i | \vec{e}) = \frac{P(\vec{e}|cell \in cluster_i)\cdot P(cell \in cluster_i)}{P(\vec{e})}$$
 
 All parts can be easily estimated from the scRNAseq atlas:
