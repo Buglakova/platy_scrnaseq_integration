@@ -182,3 +182,6 @@ data/smfish/expression_matrix_aggregated_confocal.tsv
 
 data/experiments/large_groups/qc_scrnaseq/scrnaseq_bin_expr.h5ad
 data/experiments/large_groups/qc_scrnaseq/scrnaseq_norm_expr.h5ad
+
+data/experiments/
+data/source_data
