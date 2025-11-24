@@ -34,19 +34,13 @@ def preprocess_registration_output(
     aggregated_table_path,
     out_dir,
     count_threshold=20,
-    visualize=True,
-    technique="smfish",
+    visualize=True
 ):
 
     expression_matrix_path = aggregated_table_path
     df = pd.read_csv(expression_matrix_path, sep="\t")
     df = df.set_index("label_id")
-    if technique == "smfish":
-        # columns = [col for col in df.columns if col.endswith("spots")]
-        columns = [col for col in df.columns if "_spots" in col]
-
-    if technique == "prospr":
-        columns = df.columns
+    columns = df.columns
     df_expr = df[columns]
 
     # Renaming code necessary for testing table which had weird duplicate columns, kept in case bc its more robust
