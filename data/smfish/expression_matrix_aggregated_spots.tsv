@@ -1,4 +1,4 @@
-label_id	Arx	Brn3	Bsx_AP203	COpsin1	CoE_AP151	Dbx_AP080	ER81_AP148	Fezf_AP183	FoxQ2_AP249	GATA123_AP002	Go_Opsin1_AP127	Hoxa1_AP181	Msx_AP009	NCALD	Neuropsin2_AP050	OTX	Phc2_AP156	Pkd1	Prox	Ptf1	ROpsin	Six4_AP176	StMhc	Vglut_AP173
+label_id	arx	brn3	bsx	COpsin1	coe	dbx	er81	fezf	foxq2	gata123	goopsin1	hoxa1	msx	ncald	neuropsin2	otx	phc2	pkd1	prox	ptf1	ropsin_wrong	six4	stmhc	vglut
 1	5.0	9.0	0.0	9.0	1.0	22.0	2.0	24.0	3.0	12.0	5.0	14.0	6.0	8.0	0.0	2.0	23.0	22.0	9.0	3.0	25.0	9.0	21.0	20.0
 2	27.0	10.0	1.0	3.0	3.0	3.0	1.0	37.0	1.0	15.0	1.0	5.0	2.0	7.0	2.0	9.0	46.0	18.0	6.0	1.0	15.0	16.0	20.0	34.0
 3	18.0	17.0	0.0	5.0	7.0	1.0	1.0	19.0	6.0	30.0	1.0	4.0	3.0	13.0	3.0	6.0	31.0	15.0	16.0	1.0	12.0	14.0	11.0	30.0
