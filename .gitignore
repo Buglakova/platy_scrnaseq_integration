@@ -186,3 +186,4 @@ data/experiments/large_groups/qc_scrnaseq/scrnaseq_norm_expr.h5ad
 data/experiments/
 data/source_data
 data/scrnaseq_atlas
+data/tests

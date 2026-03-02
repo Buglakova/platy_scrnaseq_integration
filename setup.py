@@ -8,7 +8,7 @@ setup(
     packages=find_packages(include=['cluster_map']),
     python_requires='>=3.6',
     install_requires=[],
-    author='Elena Buglakova, Cyril Cros',
+    author='Elena Buglakova, Samuel Haury-Parra, Cyril Cros',
     author_email='elena.buglakova@embl.de',
     license='MIT'
 )

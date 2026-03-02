@@ -25,22 +25,24 @@ def percentile_norm(expr, pmin, pmax, eps=1e-10):
 
     pmin = np.percentile(expr, pmin)
     pmax = np.percentile(expr, pmax)
-    return np.clip(((expr.astype(np.float32) - pmin) / (pmax - pmin + eps)), a_min=0, a_max=1)
+    return np.clip(
+        ((expr.astype(np.float32) - pmin) / (pmax - pmin + eps)), a_min=0, a_max=1
+    )
 
 
-def preprocess_registration_output(aggregated_table_path, out_dir, count_threshold=20, visualize=True, technique="smfish"):
+def preprocess_registration_output(
+    aggregated_table_path,
+    out_dir,
+    count_threshold=20,
+    visualize=True
+):
 
     expression_matrix_path = aggregated_table_path
     df = pd.read_csv(expression_matrix_path, sep="\t")
     df = df.set_index("label_id")
-    if technique == "smfish":
-        # columns = [col for col in df.columns if col.endswith("spots")]
-        columns = [col for col in df.columns if "_spots" in col]
-
-    if technique == "prospr":
-        columns = df.columns
+    columns = df.columns
     df_expr = df[columns]
-    
+
     # Renaming code necessary for testing table which had weird duplicate columns, kept in case bc its more robust
     # Renaming map
     new_names_map = {col: col.split("_")[0].lower() for col in df_expr.columns}
@@ -56,7 +58,7 @@ def preprocess_registration_output(aggregated_table_path, out_dir, count_thresho
 
     logging.info(f"Quality control and preprocessing of the smFISH data")
 
-    pd.set_option('display.max_columns', None)
+    pd.set_option("display.max_columns", None)
     logging.info("\n" + repr(df_expr.describe().T))
 
     if visualize:
@@ -72,7 +74,6 @@ def preprocess_registration_output(aggregated_table_path, out_dir, count_thresho
         plt.savefig(out_dir / "raw_count_violinplot.png", dpi=300)
         plt.close("all")
 
-
     # Threshold by raw number of counts
     df_thr_expr = df_expr
     df_thr_expr[df_expr <= count_threshold] = 0
@@ -82,7 +83,6 @@ def preprocess_registration_output(aggregated_table_path, out_dir, count_thresho
     df_norm_expr.index = df_thr_expr.index
     for col in df_thr_expr.columns:
         df_norm_expr[col] = percentile_norm(df_thr_expr[col], 0, 99)
-
 
     if visualize:
         plt.figure(figsize=(10, 10))
@@ -98,7 +98,10 @@ def preprocess_registration_output(aggregated_table_path, out_dir, count_thresho
     logging.info("Normalized expression df stats\n" + repr(df_norm_expr.describe().T))
     logging.info("Binarized expression df stats\n" + repr(df_bin_expr.describe().T))
 
-    logging.info("Number of cells with a given number of nonzero genes/n" + str(df_bin_expr.sum(axis=1).value_counts()))
+    logging.info(
+        "Number of cells with a given number of nonzero genes/n"
+        + str(df_bin_expr.sum(axis=1).value_counts())
+    )
 
     if visualize:
         plt.figure(figsize=(1 * len(df_expr.columns), 5))
@@ -110,17 +113,20 @@ def preprocess_registration_output(aggregated_table_path, out_dir, count_thresho
         plt.close("all")
 
         plt.figure(figsize=(0.5 * len(df_expr.columns), 5))
-        plt.bar(df_bin_expr.sum(axis=1).value_counts().index, df_bin_expr.sum(axis=1).value_counts())
+        plt.bar(
+            df_bin_expr.sum(axis=1).value_counts().index,
+            df_bin_expr.sum(axis=1).value_counts(),
+        )
         plt.xlabel("Number of nonzero genes")
         plt.ylabel("Number of cells")
         plt.savefig(out_dir / "bin_nonzero_per_cell.png", dpi=300)
         plt.close("all")
 
-    df_bin_expr.to_csv(out_dir / "smfish_bin_expr.tsv", sep="\t", index=True, index_label="label_id")
-    df_norm_expr.to_csv(out_dir / "smfish_norm_expr.tsv", sep="\t", index=True, index_label="label_id")
-
+    df_bin_expr.to_csv(
+        out_dir / "smfish_bin_expr.tsv", sep="\t", index=True, index_label="label_id"
+    )
+    df_norm_expr.to_csv(
+        out_dir / "smfish_norm_expr.tsv", sep="\t", index=True, index_label="label_id"
+    )
 
     return df_bin_expr
-
-
-    
