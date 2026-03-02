@@ -1,7 +1,7 @@
 run:
-  output_dir: "tests/test_output"
+  output_dir: "data/experiments/sclocator_broad_types"
   diagnostics: true
-  visualize: false
+  visualize: true
   vis_name_metadata_column: "Platybrowser name"
   gene_metadata_path: "data/scrnaseq_atlas/genes_metadata.tsv"
   use_spatial_weights: true
@@ -23,7 +23,7 @@ spatial_data:
     pmin: 0
     pmax: 99
   - name: "prospr"
-    df_path: "data/smfish/prospr_genes_nuclei.tsv"
+    df_path: "data/prospr/prospr_genes_nuclei.tsv"
     metadata_column: "Platybrowser name"
     bin_thresh: 0.1
     apply_norm: false
@@ -33,6 +33,13 @@ spatial_data:
     df_path: "data/smfish/expression_matrix_aggregated_mean.tsv"
     metadata_column: "Platybrowser name"
     bin_thresh: 0.05
+    apply_norm: false
+    pmin: 0
+    pmax: 99
+  - name: "spinning_disk"
+    df_path: "data/smfish/expression_matrix_aggregated_spots_spinning_disk.tsv"
+    metadata_column: "ProsPR gene"
+    bin_thresh: 20
     apply_norm: false
     pmin: 0
     pmax: 99
