@@ -159,31 +159,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# ignore actual SC-RNAseq object file
-data/smfish/expression_matrix_aggregated_local.tsv
-data/scrnaseq_atlas/seurat_curated_6dpf.h5ad
-other_cluster_map/
-data/scrnaseq_atlas/atlas_6dpf.h5ad
-data/scrnaseq_atlas/updated_6dpf_atlas.h5ad
-fixing_object/
-data/experiments/small_groups/profiles
-data/experiments/small_groups/diagnostics
-data/experiments/small_groups/qc_scrnaseq
-data/experiments/small_groups/qc_smfish_confocal
-data/experiments/small_groups/qc_smfish_prospr
-data/experiments/large_groups/diagnostics
-data/experiments/large_groups/qc_scrnaseq
-data/experiments/large_groups/profiles/profiles_dictionary.pkl
-data/experiments/large_groups/qc_smfish_confocal
-data/experiments/large_groups/qc_smfish_prospr
-
-# adding to ignore for now since a sample already exists on github and adding the rest only makes sense once its actually good!!!!
-data/smfish/expression_matrix_aggregated_confocal.tsv
-
-data/experiments/large_groups/qc_scrnaseq/scrnaseq_bin_expr.h5ad
-data/experiments/large_groups/qc_scrnaseq/scrnaseq_norm_expr.h5ad
-
+# ignore output of the cluster mapping
 data/experiments/
-data/source_data
-data/scrnaseq_atlas
-data/tests
+
+*.h5ad
