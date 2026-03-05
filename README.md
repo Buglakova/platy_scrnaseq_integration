@@ -11,9 +11,17 @@ Map scRNAseq clusters to imaging data using smFISH and ProSPR signal with [scLoc
 ```
 conda activate sclocator_env
 ```
+- Put the full scRNAseq `h5ad` (or symlink to it) to `data/scrnaseq_atlas/atlas_6dpf.h5ad`. Otherwise, change the corresponding path in the config. 
 - Use configs to run mapping
+
+for broad types:
 ```
-sclocator --config /g/kreshuk/buglakova/projects/scLocator/tests/config_test_small_groups.yaml
+sclocator --config experiments/broad_types/config_broad_types.yaml
+```
+
+for high-resolution annotations:
+```
+sclocator --config experiments/curated_high_res_annotations/config_highres_annotations.yaml
 ```
 
 **Final output**: 
