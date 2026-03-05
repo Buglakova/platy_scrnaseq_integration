@@ -46,5 +46,5 @@ spatial_data:
 
 expression_profiles:
   norm_per_gene: false
-  base_prob: 0.001
-  delta: 0.001
+  base_prob: 0.01
+  delta: 0.01

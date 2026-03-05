@@ -1,7 +1,7 @@
 run:
   output_dir: "data/experiments/sclocator_highres_annotations"
   diagnostics: true
-  visualize: false
+  visualize: true
   vis_name_metadata_column: "Platybrowser name"
   gene_metadata_path: "data/scrnaseq_atlas/genes_metadata.tsv"
   use_spatial_weights: true
@@ -46,5 +46,5 @@ spatial_data:
 
 expression_profiles:
   norm_per_gene: false
-  base_prob: 0.001
-  delta: 0.00001
+  base_prob: 0.01
+  delta: 0.01
